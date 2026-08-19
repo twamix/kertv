@@ -83,7 +83,7 @@
 ```bash
 # 1. 克隆项目
 git clone https://github.com/twamix/kertv.git
-cd kerkerker
+cd kertv
 
 # 2. 创建配置文件
 cp .env.example .env
@@ -117,6 +117,10 @@ services:
     image: mongo:7
     volumes:
       - mongodb-data:/data/db # 数据持久化
+
+volumes:
+  mongodb-data:
+    driver: local
 ```
 
 #### 常用命令
