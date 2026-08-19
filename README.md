@@ -117,6 +117,11 @@ services:
     image: mongo:7
     volumes:
       - mongodb-data:/data/db # 数据持久化
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mongodb-data:
