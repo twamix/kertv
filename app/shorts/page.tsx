@@ -70,6 +70,9 @@ export default function ShortsPage() {
         if (result.data.sources) {
           setSources(result.data.sources);
         }
+        if (result.data.source && result.data.source !== source) {
+          setCurrentSource(result.data.source);
+        }
 
         // 并行获取每个短剧的详情
         const dramasWithEpisodes = await Promise.all(
@@ -93,6 +96,10 @@ export default function ShortsPage() {
           (d) => d.episodes.length > 0 && d.episodes[0].url
         );
 
+        if (dramaList.length > 0 && validDramas.length === 0) {
+          throw new Error("当前短剧源未返回可播放地址");
+        }
+
         if (append) {
           setDramas((prev) => [...prev, ...validDramas]);
         } else {
@@ -104,7 +111,7 @@ export default function ShortsPage() {
       } catch (err) {
         console.error("[Shorts Fetch Error]", err);
         if (!append) {
-          setError("加载失败，请刷新重试");
+          setError(err instanceof Error ? err.message : "加载失败，请刷新重试");
         }
       } finally {
         setLoading(false);

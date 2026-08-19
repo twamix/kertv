@@ -106,6 +106,11 @@ interface RestAPIVideosResponse {
   has_more: boolean;
 }
 
+interface RestAPIUser {
+  screenname?: string;
+  avatar_240_url?: string;
+}
+
 async function fetchChannelDataFromRestAPI(
   channelName: string,
   page: number = 1
@@ -113,16 +118,14 @@ async function fetchChannelDataFromRestAPI(
   // 使用 Dailymotion REST API v1
   const limit = 30;
   
-  // 获取用户信息
+  // Channel profile data is optional. Some valid channels expose videos but
+  // return 404 from the user profile endpoint.
   const userResponse = await fetch(
     `https://api.dailymotion.com/user/${channelName}?fields=id,screenname,avatar_240_url`
   );
-  
-  if (!userResponse.ok) {
-    throw new Error(`Failed to fetch user: ${userResponse.status}`);
-  }
-  
-  const userData = await userResponse.json();
+  const userData: RestAPIUser = userResponse.ok
+    ? await userResponse.json()
+    : {};
   
   // 获取视频列表
   const videosResponse = await fetch(
