@@ -138,7 +138,6 @@ export function Navbar({ scrolled, onSearchOpen }: NavbarProps) {
                   <Link
                     key={item.href}
                     href={item.href!}
-                    target={item.external ? "_blank" : undefined}
                     className="text-gray-400 hover:text-white transition-colors text-sm font-medium"
                   >
                     {item.label}
@@ -239,7 +238,6 @@ export function Navbar({ scrolled, onSearchOpen }: NavbarProps) {
                 <Link
                   key={item.href}
                   href={item.href!}
-                  target={item.external ? "_blank" : undefined}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 group"
                 >
