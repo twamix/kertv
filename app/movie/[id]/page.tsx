@@ -52,6 +52,7 @@ interface MovieDetail {
   region: string;
   release_year: string;
   episodes_count: string;
+  description?: string;
   short_comment?: {
     content: string;
     author: string | { name: string };
@@ -148,6 +149,7 @@ export default function MovieDetailPage() {
                 apiData.release_year || cachedData.release_year || "",
               episodes_count:
                 cachedData.episodes_count || apiData.episodes_count || "",
+              description: apiData.description || cachedData.description || "",
               short_comment: apiData.short_comment || cachedData.short_comment,
               // 新增字段
               photos: apiData.photos || [],
@@ -561,18 +563,34 @@ export default function MovieDetailPage() {
                   )}
                 </div>
 
-                {/* 短评 */}
-                {movieDetail?.short_comment && (
+                {/* 剧情简介，缺失时回退到短评 */}
+                {(movieDetail?.description ||
+                  movieDetail?.short_comment?.content) && (
                   <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                    <p className="text-gray-300 text-sm italic leading-relaxed">
-                      &ldquo;{movieDetail.short_comment.content}&rdquo;
-                    </p>
-                    <p className="text-gray-500 text-xs mt-2">
-                      ——{" "}
-                      {typeof movieDetail.short_comment.author === "string"
-                        ? movieDetail.short_comment.author
-                        : movieDetail.short_comment.author?.name}
-                    </p>
+                    {movieDetail.description ? (
+                      <>
+                        <h3 className="text-sm font-medium text-white mb-2">
+                          剧情简介
+                        </h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">
+                          {movieDetail.description}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-gray-300 text-sm italic leading-relaxed">
+                          &ldquo;{movieDetail.short_comment?.content}&rdquo;
+                        </p>
+                        {movieDetail.short_comment?.author && (
+                          <p className="text-gray-500 text-xs mt-2">
+                            ——{" "}
+                            {typeof movieDetail.short_comment.author === "string"
+                              ? movieDetail.short_comment.author
+                              : movieDetail.short_comment.author.name}
+                          </p>
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
 
