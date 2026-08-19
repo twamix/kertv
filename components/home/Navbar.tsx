@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, Home, Film, Tv, Clock, Video, Github, Calendar, History } from "lucide-react";
+import { Menu, X, Home, Film, Tv, Clock, Video, Calendar, History } from "lucide-react";
 import { HistoryPopup } from "./HistoryPopup";
 
 interface NavbarProps {
@@ -41,12 +41,6 @@ export function Navbar({ scrolled, onSearchOpen }: NavbarProps) {
         { href: "/shorts", label: "短剧" },
         { href: "/dailymotion", label: "短剧Motion" },
       ],
-    },
-    {
-      href: "https://github.com/twamix/kertv",
-      label: "Github",
-      icon: Github,
-      external: true,
     },
   ];
 
