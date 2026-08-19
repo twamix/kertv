@@ -60,7 +60,7 @@
 
 > 无需服务器，免费托管，自动 HTTPS
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/unilei/kerkerker)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/twamix/kertv)
 
 **步骤：**
 
@@ -82,7 +82,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/unilei/kerkerker.git
+git clone https://github.com/twamix/kertv.git
 cd kerkerker
 
 # 2. 创建配置文件
@@ -103,7 +103,7 @@ docker-compose logs -f app
 ```yaml
 services:
   app:
-    build: .
+    image: ghcr.io/twamix/kertv:latest
     ports:
       - "3000:3000" # 修改左侧端口号自定义访问端口
     environment:
@@ -137,10 +137,10 @@ docker-compose pull        # 更新镜像
 
 ```bash
 # 使用 curl
-curl -fsSL https://raw.githubusercontent.com/unilei/kerkerker/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/twamix/kertv/master/scripts/install.sh | bash
 
 # 使用 wget
-wget -qO- https://raw.githubusercontent.com/unilei/kerkerker/master/scripts/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/twamix/kertv/master/scripts/install.sh | bash
 ```
 
 **部署后管理：**

@@ -5,9 +5,9 @@
 # ============================================================
 # 支持系统: Ubuntu, Debian, CentOS, RHEL, Alpine, macOS, Arch Linux
 # 使用方法:
-#   curl -fsSL https://raw.githubusercontent.com/unilei/kerkerker/master/scripts/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/twamix/kertv/master/scripts/install.sh | sh
 #   或
-#   wget -qO- https://raw.githubusercontent.com/unilei/kerkerker/master/scripts/install.sh | sh
+#   wget -qO- https://raw.githubusercontent.com/twamix/kertv/master/scripts/install.sh | sh
 # ============================================================
 
 set -e
@@ -76,7 +76,7 @@ fi
 # ==================== 配置 ====================
 SCRIPT_VERSION="1.1.0"
 SCRIPT_DATE="2025-12-26"
-DOCKER_IMAGE="unilei/kerkerker"
+DOCKER_IMAGE="ghcr.io/twamix/kertv"
 DEFAULT_VERSION="latest"
 DEFAULT_PORT="3000"
 INSTALL_DIR="${KERKERKER_INSTALL_DIR:-$HOME/kerkerker}"
@@ -712,7 +712,7 @@ show_completion() {
     
     # 显示教程链接
     printf "%b📖 更多教程:%b\n" "${BOLD}" "${NC}"
-    echo "   项目文档: https://github.com/unilei/kerkerker"
+    echo "   项目文档: https://github.com/twamix/kertv"
     echo ""
 }
 

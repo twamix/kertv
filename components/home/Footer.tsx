@@ -53,7 +53,7 @@ export function Footer() {
 
           <div className="flex items-center gap-6">
             <a
-              href="https://github.com/unilei/kerkerker"
+              href="https://github.com/twamix/kertv"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors flex items-center gap-1"
