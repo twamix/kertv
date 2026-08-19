@@ -87,10 +87,6 @@ function LoginForm() {
             </button>
           </form>
 
-          <div className="mt-8 text-center text-sm text-[#8c8c8c]">
-            <p>默认密码：admin123</p>
-            <p className="mt-1">可通过环境变量 ADMIN_PASSWORD 修改</p>
-          </div>
         </div>
       </div>
     </div>
