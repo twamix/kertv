@@ -118,7 +118,9 @@ export async function GET(request: NextRequest) {
     return new Response('No video sources configured', { status: 404 });
   }
   
-  const origin = request.nextUrl.origin;
+  // This is a server-to-server callback within the same container. Using the
+  // public request origin can fail when the site is behind a reverse proxy.
+  const origin = `http://127.0.0.1:${process.env.PORT || '3000'}`;
   
   // 创建 SSE 流
   const encoder = new TextEncoder();
