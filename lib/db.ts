@@ -127,16 +127,6 @@ async function initializeDatabase(db: Db) {
     const selectionCollection = db.collection(COLLECTIONS.VOD_SOURCE_SELECTION);
     await selectionCollection.createIndex({ id: 1 }, { unique: true });
 
-    // 创建 dailymotion_channels 集合的索引
-    const dailymotionChannelsCollection = db.collection(COLLECTIONS.DAILYMOTION_CHANNELS);
-    await dailymotionChannelsCollection.createIndex({ id: 1 }, { unique: true });
-    await dailymotionChannelsCollection.createIndex({ username: 1 });
-    await dailymotionChannelsCollection.createIndex({ isActive: 1 });
-
-    // 创建 dailymotion_config 集合的索引
-    const dailymotionConfigCollection = db.collection(COLLECTIONS.DAILYMOTION_CONFIG);
-    await dailymotionConfigCollection.createIndex({ id: 1 }, { unique: true });
-
     globalForMongo.initialized = true;
     console.log('✅ MongoDB 数据库初始化完成');
   } catch (error) {

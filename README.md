@@ -8,7 +8,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-**现代化影视资源聚合平台** - 支持 Dailymotion 视频源、豆瓣信息匹配、多种部署方式
+**现代化影视资源聚合平台** - 支持多视频源聚合、豆瓣信息匹配、多种部署方式
 
 🌐 **在线演示**: [https://kerkerker.vercel.app](https://kerkerker.vercel.app)
 
@@ -20,13 +20,13 @@
 
 ## ✨ 功能特性
 
-- 🎬 **视频聚合** - 聚合 Dailymotion 等多个视频源
+- 🎬 **视频聚合** - 聚合多个 VOD 视频源
 - 📝 **豆瓣匹配** - 自动匹配豆瓣电影信息和评分
 - 💬 **弹幕功能** - 自动匹配加载弹幕，支持手动搜索
 - 🎥 **高级播放器** - ArtPlayer 播放器，支持 HLS、倍速、快捷键
 - 📱 **响应式设计** - 完美支持移动端和桌面端
 - 🎨 **现代化 UI** - Netflix 风格界面设计
-- 🔐 **后台管理** - 视频源配置、频道管理 (`/login`)
+- 🔐 **后台管理** - 视频源配置、播放器设置 (`/login`)
 - 🚀 **多种部署** - 支持 Vercel、Docker、VPS 一键部署
 
 ## 📸 界面预览

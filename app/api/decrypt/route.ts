@@ -15,11 +15,10 @@ interface EncryptedPackage {
 }
 
 interface ConfigPayload {
-  type: 'vod' | 'dailymotion' | 'all';
+  type: 'vod' | 'all';
   timestamp: number;
   expiresAt?: number;
   vodSources?: unknown[];
-  dailymotionChannels?: unknown[];
 }
 
 /**

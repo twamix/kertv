@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { VodSource } from "@/types/drama";
-import { ShortDramaSource } from "@/types/shorts-source";
-import { DailymotionChannelConfig } from "@/types/dailymotion-config";
 import { Modal } from "@/components/Modal";
 import type { VodSourcesTabProps } from "./types";
 import { isSubscriptionUrl } from "@/lib/utils";
@@ -11,8 +9,6 @@ import { isSubscriptionUrl } from "@/lib/utils";
 // 统一导入预览类型
 interface UnifiedImportPreview {
   vodSources?: VodSource[];
-  shortsSources?: ShortDramaSource[];
-  dailymotionChannels?: Omit<DailymotionChannelConfig, "id" | "createdAt">[];
 }
 
 export function VodSourcesTab({
@@ -22,7 +18,6 @@ export function VodSourcesTab({
   onSelectedKeyChange,
   onShowToast,
   onShowConfirm,
-  unifiedImport,
 }: VodSourcesTabProps) {
   const [editingSource, setEditingSource] = useState<VodSource | null>(null);
   const [isAddMode, setIsAddMode] = useState(false);
@@ -99,15 +94,6 @@ export function VodSourcesTab({
         preview.vodSources = payload.vodSources;
         setImportPreview(payload.vodSources);
       }
-      if (payload.shortsSources && payload.shortsSources.length > 0) {
-        preview.shortsSources = payload.shortsSources;
-      }
-      if (
-        payload.dailymotionChannels &&
-        payload.dailymotionChannels.length > 0
-      ) {
-        preview.dailymotionChannels = payload.dailymotionChannels;
-      }
 
       if (Object.keys(preview).length === 0) {
         setDecryptError("配置中没有任何可导入的数据");
@@ -176,126 +162,7 @@ export function VodSourcesTab({
         }
       }
 
-      // 2. 导入短剧源
-      if (
-        unifiedPreview.shortsSources &&
-        unifiedPreview.shortsSources.length > 0 &&
-        unifiedImport
-      ) {
-        // 先获取当前短剧源
-        const shortsResponse = await fetch("/api/shorts-sources");
-        const shortsData = await shortsResponse.json();
-        const existingShortsSources: ShortDramaSource[] =
-          shortsData.data?.sources || [];
-        const existingShortsSelected: string =
-          shortsData.data?.selected?.key || "";
-
-        let finalSources: ShortDramaSource[];
-        let finalSelected: string | null;
-
-        let shortsResultMsg = "";
-        if (importMode === "merge") {
-          const existingKeys = new Set(existingShortsSources.map((s) => s.key));
-          const newSources = unifiedPreview.shortsSources.filter(
-            (s) => !existingKeys.has(s.key)
-          );
-          finalSources = [...existingShortsSources, ...newSources];
-          finalSelected =
-            existingShortsSelected || finalSources[0]?.key || null;
-          shortsResultMsg = `短剧源 +${newSources.length} 个${
-            newSources.length < unifiedPreview.shortsSources.length
-              ? `（跳过 ${
-                  unifiedPreview.shortsSources.length - newSources.length
-                } 个重复）`
-              : ""
-          }`;
-        } else {
-          finalSources = unifiedPreview.shortsSources;
-          finalSelected = unifiedPreview.shortsSources[0]?.key || null;
-          shortsResultMsg = `短剧源 ${unifiedPreview.shortsSources.length} 个（已替换）`;
-        }
-
-        const response = await fetch("/api/shorts-sources", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            sources: finalSources,
-            selected: finalSelected,
-          }),
-        });
-        const result = await response.json();
-        if (result.code === 200) {
-          unifiedImport.onShortsSourcesImport(
-            finalSources,
-            finalSelected || undefined
-          );
-          results.push(shortsResultMsg);
-        } else {
-          hasError = true;
-          results.push(`短剧源导入失败: ${result.message || "未知错误"}`);
-        }
-      }
-
-      // 3. 导入 Dailymotion 频道
-      if (
-        unifiedPreview.dailymotionChannels &&
-        unifiedPreview.dailymotionChannels.length > 0 &&
-        unifiedImport
-      ) {
-        // 获取现有频道
-        const dmResponse = await fetch("/api/dailymotion-config");
-        const dmData = await dmResponse.json();
-        const existingChannels: DailymotionChannelConfig[] =
-          dmData.data?.channels || [];
-        const existingUsernames = new Set(
-          existingChannels.map((c) => c.username)
-        );
-
-        if (importMode === "replace") {
-          // 替换模式：先清空再添加
-          for (const channel of existingChannels) {
-            await fetch("/api/dailymotion-config", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ action: "delete", id: channel.id }),
-            });
-          }
-          existingUsernames.clear();
-        }
-
-        let addedCount = 0;
-        let skippedCount = 0;
-        for (const channel of unifiedPreview.dailymotionChannels) {
-          if (existingUsernames.has(channel.username)) {
-            skippedCount++;
-            continue;
-          }
-          const response = await fetch("/api/dailymotion-config", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "add", ...channel }),
-          });
-          const result = await response.json();
-          if (result.code === 200) {
-            unifiedImport.onDailymotionImport(
-              result.data.channels,
-              result.data.defaultChannelId
-            );
-            existingUsernames.add(channel.username);
-            addedCount++;
-          }
-        }
-        if (addedCount > 0 || skippedCount > 0) {
-          const msg =
-            importMode === "merge"
-              ? `Dailymotion +${addedCount} 个${
-                  skippedCount > 0 ? `（跳过 ${skippedCount} 个重复）` : ""
-                }`
-              : `Dailymotion ${addedCount} 个（已替换）`;
-          results.push(msg);
-        }
-      }
-
+      // 2. 导入完成
       if (results.length > 0) {
         onShowToast({
           message: hasError
@@ -826,69 +693,6 @@ export function VodSourcesTab({
                         {unifiedPreview.vodSources.length > 3 && (
                           <div className="text-xs text-slate-500">
                             ... 还有 {unifiedPreview.vodSources.length - 3} 个
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                {/* 短剧源 */}
-                {unifiedPreview.shortsSources &&
-                  unifiedPreview.shortsSources.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#E50914]">🎬</span>
-                        <span className="text-white font-medium">
-                          短剧源 ({unifiedPreview.shortsSources.length} 个)
-                        </span>
-                      </div>
-                      <div className="pl-6 space-y-1">
-                        {unifiedPreview.shortsSources
-                          .slice(0, 3)
-                          .map((source, idx) => (
-                            <div
-                              key={source.key || idx}
-                              className="text-sm text-slate-400"
-                            >
-                              • {source.name}
-                            </div>
-                          ))}
-                        {unifiedPreview.shortsSources.length > 3 && (
-                          <div className="text-xs text-slate-500">
-                            ... 还有 {unifiedPreview.shortsSources.length - 3}{" "}
-                            个
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                {/* Dailymotion 频道 */}
-                {unifiedPreview.dailymotionChannels &&
-                  unifiedPreview.dailymotionChannels.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#E50914]">📹</span>
-                        <span className="text-white font-medium">
-                          Dailymotion 频道 (
-                          {unifiedPreview.dailymotionChannels.length} 个)
-                        </span>
-                      </div>
-                      <div className="pl-6 space-y-1">
-                        {unifiedPreview.dailymotionChannels
-                          .slice(0, 3)
-                          .map((channel, idx) => (
-                            <div
-                              key={channel.username || idx}
-                              className="text-sm text-slate-400"
-                            >
-                              • {channel.displayName} (@{channel.username})
-                            </div>
-                          ))}
-                        {unifiedPreview.dailymotionChannels.length > 3 && (
-                          <div className="text-xs text-slate-500">
-                            ... 还有{" "}
-                            {unifiedPreview.dailymotionChannels.length - 3} 个
                           </div>
                         )}
                       </div>

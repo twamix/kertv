@@ -93,7 +93,7 @@ print_banner() {
     echo "║                                                           ║"
     print_color "║   ${BOLD}🎬 Kerkerker 一键部署脚本${NC}${CYAN}                              ║\n"
     echo "║                                                           ║"
-    echo "║   短剧/影视管理平台                                       ║"
+    echo "║   影视资源聚合平台                                        ║"
     echo "║                                                           ║"
     print_color "║   版本: ${SCRIPT_VERSION}  更新: ${SCRIPT_DATE}                          ║\n"
     echo "╚═══════════════════════════════════════════════════════════╝"
